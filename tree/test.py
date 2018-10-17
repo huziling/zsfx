@@ -3,8 +3,27 @@ import numpy as np
 from math import log
 import operator
 import random
+import gensim
+# import jieba
+
+# stop = []
+# with open("stopwords.txt",'r',encoding = "UTF-8") as f:
+#     for line in f:
+#         stop.append(line.strip())
+# jieba.enable_parallel(8)
+# dframe = pd.read_excel("test.xlsx",header=None)
+# with open("out.txt",'w+',encoding = "UTF-8") as f:
+#     for line in dframe[3]:
+#         print(line)
+#         wordlist = list(jieba.cut(line.strip('\n')))
+#         ostr = ""
+#         for word in wordlist:
+#             if  len(word) > 1 and word not in stop:
+#                 ostr += word
+#                 ostr += " " 
+#         f.write(ostr.strip() + "\n")
 # ctoi = {'/location/location/contains':0,"/people/person/nationality":1,'/people/person/place_lived':2,'/business/person/company':3}
-# df = pd.read_excel("train_ultimate.xlsx",header=None)
+# df = pd.read_excel("test.xlsx",header=None)
 # model = gensim.models.Word2Vec.load("w2v_model1")
 # data = None
 # for row in df.iterrows():
@@ -31,47 +50,43 @@ import random
 #     else:
 #         t[0,0] = -1
 #     temp2 =  np.append(temp2,t,axis = 1)
-#     if row[2] in ctoi:
-#         t[0,0] = ctoi[row[2]]
-#     else:
-#         t[0,0] = 4
-#     temp2 =  np.append(temp2,t,axis = 1)
+  
 #     temp1 = np.append(temp1,temp2,axis = 1)
 #     if data is None:
 #         data = temp1
 #     else:
 #         data = np.append(data,temp1,axis = 0)
-# np.savetxt("dataset.txt",data,fmt='%0.8f',delimiter=',')
+# np.savetxt("testset.txt",data,fmt='%0.8f',delimiter=',')
 
-# data = np.loadtxt('dataset.txt',delimiter=',')
-# def lower_bound(nums, target):
-#     low, high = 0, len(nums)-1
-#     pos = len(nums) 
-#     while low<high: 
-#         mid = int((low+high)/2)
-#         if nums[mid] < target: 
-#             low = mid+1 
-#         else:
-#             high = mid
-#             pos = high 
-#     return pos
-# l = data.shape[1]
-# for i in range(l-3):
-#     col = data[:,i].tolist()
-#     sc = list(set(col))
-#     #print(len(col))
-#     sc.sort()
-#     lt = int(len(sc)/100)
-#     sct = []
-#     for j in range(99):
-#         sct.append(sc[lt*(1+j)])
-#     #print(len(sct))
-#     #input()
-#     for j in range(len(col)):
-#         col[j] = lower_bound(sct,col[j])
-#     col = np.asarray(col)
-#     data[:,i] = col[:]
-# np.savetxt('data.txt',data,fmt='%d',delimiter=',')
+data = np.loadtxt('testset.txt',delimiter=',')
+def lower_bound(nums, target):
+    low, high = 0, len(nums)-1
+    pos = len(nums) 
+    while low<high: 
+        mid = int((low+high)/2)
+        if nums[mid] < target: 
+            low = mid+1 
+        else:
+            high = mid
+            pos = high 
+    return pos
+l = data.shape[1]
+for i in range(l-2):
+    col = data[:,i].tolist()
+    sc = list(set(col))
+    #print(len(col))
+    sc.sort()
+    lt = int(len(sc)/100)
+    sct = []
+    for j in range(99):
+        sct.append(sc[lt*(1+j)])
+    #print(len(sct))
+    #input()
+    for j in range(len(col)):
+        col[j] = lower_bound(sct,col[j])
+    col = np.asarray(col)
+    data[:,i] = col[:]
+np.savetxt('test.txt',data,fmt='%d',delimiter=',')
 
 # data = np.loadtxt('data.txt',delimiter=',')
 # ll = [i for i in range(data.shape[0])]
@@ -97,7 +112,7 @@ import random
 # dict_name = eval(a)
 # f.close()
 # print(dict_name)
-# print(dict_name[1])
+
 # import gensim
 # def getsentence(path):
 #     sent = []

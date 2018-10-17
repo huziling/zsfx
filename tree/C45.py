@@ -4,7 +4,7 @@ import operator
 import numpy as np
 import os
 import random
-
+import ast
 ctoi = {0:'/location/location/contains',1:"/people/person/nationality",2:'/people/person/place_lived',3:'/business/person/company',4:'NA'}
 def loaddata(filename):
 	if filename == "":
@@ -231,52 +231,54 @@ def eva(test,tree):
 	labels = ['lable'+str(i) for i in range(102)]
 	f = open('pred.txt','w',encoding = 'utf-8')
 	for ex in test:
-		vec = ex[:-1]
-		cl = ex[-1]
-		pr = classify(tree,labels,vec)
+		#vec = ex[:-1]
+		#cl = ex[-1]
+		pr = classify(tree,labels,ex)
 		f.write(pr+'\n')
 		#print(cl,pr)
-		if cl == pr:
-			cnt += 1
-	cnt = cnt / len(test)
-	print(cnt)
-	f.write(str(cnt)+'\n')
+		# if cl == pr:
+		# 	cnt += 1
+	#cnt = cnt / len(test)
+	#print(cnt)
+	#f.write(str(cnt)+'\n')
+	f.close()
 	return cnt
 
 
 def main():
 	path = os.getcwd()
 	data = np.loadtxt('data.txt',dtype=np.int,delimiter=',')
+	#data = np.delete(data,-2,axis=1)
+	#data = np.delete(data,-2,axis=1)
 	besttree = None
 	bac = 0
-	for k in range(100):
-		labels = ['lable'+str(i) for i in range(102)]
-		ll = [i for i in range(data.shape[0])]
-		ll = random.sample(ll,data.shape[0])
-		tr = ll[:4000]
-		tt = ll[4000:]
-		train = data[tr].tolist()
-		test = data[tt].tolist()
-		for i in range(len(train)):
-			train[i][-1] = ctoi[train[i][-1]]
-		for i in range(len(test)):
-			test[i][-1] = ctoi[test[i][-1]]
+	labels = ['lable'+str(i) for i in range(102)]
+	train = data.tolist()
+	for i in range(len(train)):
+		train[i][-1] = ctoi[train[i][-1]]
 		#labels.append('class')
-		tree = createTree(train,labels)
+	tree = createTree(train,labels)
 		#print(tree)
 		#print(Tree)
 		# s = str(tree)
 		# #print(s)	
 		# f.write(s)
 		# f.close()
-		ac = eva(test,tree)
-		if ac > bac:
-			besttree = tree
-		print('down',k)
-	eva(test,besttree)
+	besttree = tree
 	f = open('tree.txt','w',encoding = 'utf-8')
 	f.write(str(tree))
 	f.close()
+	f = open('tree.txt','r',encoding = 'utf-8')
+	tree = f.read()
+	print(tree)
+	tree =ast.literal_eval(tree)
+	f.close()
+	tdata = np.loadtxt('test.txt',dtype=np.int,delimiter=',')
+	#tdata = np.delete(tdata,-1,axis=1)
+	#tdata = np.delete(tdata,-1,axis=1)
+	tdata = tdata.tolist()
+	eva(tdata,tree)
+
 
 
 if __name__ == '__main__':
