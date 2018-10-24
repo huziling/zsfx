@@ -1,0 +1,14 @@
+首先用.res文件query10的最后一个articleid将document文件的前
+10个query对应article整体的拆出来
+然后test.py读取每一个query的res信息
+同时把每一个query的每一个article的title和body读取后
+进行分词，存成文件
+（读取html文件使用beautifulsoup4包）
+将每个query的所有article存成一个对应文件
+用Glove训练词向量模型（github的代码）
+getmodel.py读词向量模型，根据之前得到的分词结果，得到每一个
+query的所有article的词向量，存成文件
+
+logic.py读取文件，执行随机批量梯度下降的logic回归
+run.txt为结果 其中每一行的前面是对200测试集的分类结果
+最后一列是准确率(记事本打开会乱格式 ，可以用别的跨平台文本编辑器打开)
